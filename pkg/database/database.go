@@ -21,3 +21,4 @@ func Init() pg.DB {
 	}
 	return *DB
 }
+	
