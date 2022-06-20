@@ -1,7 +1,7 @@
 package database
 
 import (
-	"os"
+	"log"
 
 	"github.com/go-pg/pg"
 )
@@ -9,16 +9,10 @@ import (
 var DB *pg.DB
 
 func Init() pg.DB {
-	dbURL := os.Getenv("DATABASE_URL")
-	if dbURL == "" {
-		DB = pg.Connect(&pg.Options{User: "postgres"})
-	} else {
-		DB = pg.Connect(&pg.Options{
-			User:     "postgres",
-			Database: "postgres",
-			Addr:     dbURL,
-		})
+	DB = pg.Connect(&pg.Options{User: "postgres"})
+	if DB == nil {
+		log.Panic("Database connection error")
 	}
+	log.Println("Database connected")
 	return *DB
 }
-	

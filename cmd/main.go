@@ -1,12 +1,13 @@
 package main
 
 import (
-	"fmt"
+	"log"
 
-	"github.com/Jyolando/link_shortener_bot/pkg/database"
+	"github.com/Jyolando/link_shortener_bot/pkg/telegram"
 )
 
 func main() {
-	DB := database.Init()
-	fmt.Println(DB.String())
+	log.Println("Starting link shortener bot...")
+	log.Println("Initializing telegram bot...")
+	telegram.StartBot("")
 }
