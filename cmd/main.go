@@ -9,5 +9,5 @@ import (
 func main() {
 	log.Println("Starting link shortener bot...")
 	log.Println("Initializing telegram bot...")
-	telegram.StartBot("")
+	telegram.StartBot("*")
 }

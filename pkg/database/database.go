@@ -1,18 +1,35 @@
 package database
 
 import (
+	"fmt"
 	"log"
 
-	"github.com/go-pg/pg"
+	"github.com/jmoiron/sqlx"
+	_ "github.com/lib/pq"
 )
 
-var DB *pg.DB
+type User struct {
+	UserId  string
+	Attempt int
+}
 
-func Init() pg.DB {
-	DB = pg.Connect(&pg.Options{User: "postgres"})
-	if DB == nil {
-		log.Panic("Database connection error")
+var (
+	db  *sqlx.DB
+	err error
+)
+
+func Init() {
+	db, err = sqlx.Connect("postgres", "user=postgres dbname=* password=* sslmode=disable")
+
+	if err != nil {
+		log.Panic(err)
 	}
-	log.Println("Database connected")
-	return *DB
+
+	test := []User{}
+	err = db.Select(&test, `SELECT userid, attempt FROM users`)
+	if err != nil {
+		fmt.Println(err)
+	}
+
+	fmt.Println(test)
 }

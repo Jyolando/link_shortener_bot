@@ -16,12 +16,14 @@ var startKeyboard = tgbotapi.NewReplyKeyboard(
 
 func CmdStart(bot *tgbotapi.BotAPI, update tgbotapi.Update) {
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
-	if update.Message.Chat.UserName == "" {
-		msg.Text = "Please, set your username in Telegram settings"
-	} else {
+
+	if update.Message.IsCommand() {
 		msg.Text = "Welcome, " + update.Message.Chat.UserName + "!"
+		msg.Text = msg.Text + "\nHello, I'm a link shortener bot.\nUse bottom keyboard to use me."
+	} else {
+		msg.Text = "Use bottom keyboard to use my functional."
 	}
-	msg.Text = msg.Text + "\nHello, I'm a link shortener bot.\nUse bottom keyboard to use me."
+
 	msg.ReplyMarkup = startKeyboard
 	if _, err := bot.Send(msg); err != nil {
 		log.Println(err)
