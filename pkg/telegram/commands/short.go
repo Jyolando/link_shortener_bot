@@ -1,6 +1,7 @@
 package commands
 
 import (
+	"database/sql"
 	"log"
 	"math/rand"
 	"net/url"
@@ -37,14 +38,19 @@ func CmdShorten(bot *tgbotapi.BotAPI, update tgbotapi.Update) int {
 	return 3 // attempt to shorten link
 }
 
-func TryShort(bot *tgbotapi.BotAPI, update tgbotapi.Update, attempt int) bool {
+func TryShort(bot *tgbotapi.BotAPI, update tgbotapi.Update, attempt int, db *sql.DB) bool {
 	msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
 
 	if link(update.Message.Text).IsUrl() {
-		log.Println("Shortening link:", update.Message.Text)
+		rand := RandStringRunes(6)
 
-		msg.Text = "Link " + update.Message.Text + " is shortened to jyolando.ru/" + RandStringRunes(6)
+		log.Println("Shortening link:", update.Message.Text)
+		msg.Text = "Link " + update.Message.Text + " is shortened to jyolando.ru/" + rand
 		bot.Send(msg)
+		_, err := db.Query("INSERT INTO links (fulllink, shortlink) VALUES ($1, $2)", update.Message.Text, rand)
+		if err != nil {
+			panic(err)
+		}
 		CmdStart(bot, update)
 		return true
 	} else {

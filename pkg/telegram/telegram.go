@@ -1,6 +1,7 @@
 package telegram
 
 import (
+	"database/sql"
 	"log"
 
 	"github.com/Jyolando/link_shortener_bot/pkg/database"
@@ -9,6 +10,7 @@ import (
 )
 
 var waitLink int
+var db *sql.DB
 
 func StartBot(key string) {
 	bot, err := tgbotapi.NewBotAPI(key)
@@ -18,7 +20,7 @@ func StartBot(key string) {
 
 	log.Println("Telegram Bot online, nickname:", bot.Self.UserName)
 	log.Println("Initializing database...")
-	database.Init()
+	db = database.Init()
 	getUpdates(bot)
 }
 
@@ -37,7 +39,7 @@ func getUpdates(bot *tgbotapi.BotAPI) {
 		}
 
 		if waitLink != 0 {
-			if commands.TryShort(bot, update, waitLink) {
+			if commands.TryShort(bot, update, waitLink, db) {
 				waitLink = 0 // if user entered valid link, reset waitLink
 				log.Println("waitLink reset")
 				continue
