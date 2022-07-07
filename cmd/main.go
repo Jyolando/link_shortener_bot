@@ -10,6 +10,6 @@ import (
 func main() {
 	log.Println("Starting link shortener bot...")
 	log.Println("Initializing telegram bot...")
-	go telegram.StartBot("5417497178:AAE5G2KhNMWCOBYlRiNTvk6NxWCYire2vws")
+	go telegram.StartBot("*")
 	web.Init()
 }
